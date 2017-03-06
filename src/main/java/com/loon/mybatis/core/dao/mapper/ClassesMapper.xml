@@ -8,10 +8,10 @@
         <association property="teacher" column="teacher_id" select="getTeacher"/>
     </resultMap>
     <select id="getClasses" parameterType="java.lang.Integer" resultMap="restlt">
-        SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class WHERE c_id = #{id}
+        SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class WHERE c_id = #{id,jdbcType=Integer}
     </select>
     <select id="getTeacher" parameterType="java.lang.Integer" resultType="com.loon.mybatis.core.pojo.Teacher">
-        SELECT t_id tId,t_name tName FROM teacher WHERE t_id = #{id}
+        SELECT t_id tId,t_name tName FROM teacher WHERE t_id = #{id,jdbcType=Integer}
     </select>
     <select id="getAllClasses" resultMap="restlt">
         SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class
