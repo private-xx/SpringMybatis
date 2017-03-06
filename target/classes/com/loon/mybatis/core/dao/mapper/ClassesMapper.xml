@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loon.mybatis.core.dao.ClassesMapper">
+    <resultMap id="restlt" type="com.loon.mybatis.core.pojo.Classes">
+        <id property="id" column="c_id"/>
+        <id property="name" column="c_name"/>
+        <id property="createtime" column="c_createtime"/>
+        <association property="teacher" column="teacher_id" select="getTeacher"/>
+    </resultMap>
+    <select id="getClasses" parameterType="java.lang.Integer" resultMap="restlt">
+        SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class WHERE c_id = #{id}
+    </select>
+    <select id="getTeacher" parameterType="java.lang.Integer" resultType="com.loon.mybatis.core.pojo.Teacher">
+        SELECT t_id tId,t_name tName FROM teacher WHERE t_id = #{id}
+    </select>
+    <select id="getAllClasses" resultMap="restlt">
+        SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class
+    </select>
+</mapper>

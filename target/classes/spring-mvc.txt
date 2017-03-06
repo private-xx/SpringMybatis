@@ -1,0 +1,26 @@
+spring-mvc mybatis搭建过程
+1.maven下载相关依赖包
+2.配置spring.xml文件
+  spring.xml:
+  (1)配置 <context:component-scan base-package="com.loon.mybatis">
+                   <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+                   <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/>
+               </context:component-scan>
+           <aop:aspectj-autoproxy/>
+    (2)导入其他配置文件例如 mybatis的配置文件：
+     <import resource="spring-mybatis.xml"/>
+
+2.配置spring-mybatis.xml
+配置dataSource   使用druid连接池
+
+配置sqlSessionFactory
+
+配置动态扫描dao包
+
+配置事务
+
+3.配置spring-mvc.xml
+
+配置controller文件的扫描
+
+配置

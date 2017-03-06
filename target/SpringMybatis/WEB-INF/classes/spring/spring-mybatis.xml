@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:db/db.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${mysql.connection.driverClassName}"/>
+        <!--基本属性 url , user , password-->
+        <property name="url" value="${mysql.connection.url}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="${mysql.connection.username}"/>
+        <property name="password" value="${mysql.connection.password}"/>
+        <!--初始化大小，最大，最小-->
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="maxActive" value="${druid.maxActive}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <!--获取连接超时时间-->
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <!--配置隔多久才会进行一次检测，检测需要关闭的空闲连接，单位是毫秒-->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"/>
+        <property name="validationQuery" value="${druid.validationQuery}"/>
+        <property name="testOnBorrow" value="${druid.testOnBorrow}"/>
+        <property name="testOnReturn" value="${druid.testOnReturn}"/>
+        <property name="testWhileIdle" value="${druid.testWhileIdle}"/>
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小  如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。-->
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}"/>
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="${druid.filters}"/>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:com/**/mapper/*.xml"/>
+        <property name="typeAliasesPackage" value="com.loon.**.pojo"/>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+    <!--配置扫描Dao接口包，动态实现Dao接口    注入到spring容器中-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.loon.**.dao"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+</beans>
