@@ -5,13 +5,13 @@
         <id property="id" column="c_id"/>
         <id property="name" column="c_name"/>
         <id property="createtime" column="c_createtime"/>
-        <association property="teacher" column="teacher_id" select="getTeacher"/>
+        <association property="teacher" column="teacher_id" select="com.loon.mybatis.core.dao.TeacherMapper.selectByPrimaryKey"/>
     </resultMap>
     <select id="getClasses" parameterType="java.lang.Integer" resultMap="restlt">
-        SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class WHERE c_id = #{id,jdbcType=Integer}
+        SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class WHERE c_id = #{id}
     </select>
     <select id="getTeacher" parameterType="java.lang.Integer" resultType="com.loon.mybatis.core.pojo.Teacher">
-        SELECT t_id tId,t_name tName FROM teacher WHERE t_id = #{id,jdbcType=Integer}
+        SELECT t_id tId,t_name tName FROM teacher WHERE t_id = #{id}
     </select>
     <select id="getAllClasses" resultMap="restlt">
         SELECT c_id id,c_name name,teacher_id,c_createtime createtime FROM class

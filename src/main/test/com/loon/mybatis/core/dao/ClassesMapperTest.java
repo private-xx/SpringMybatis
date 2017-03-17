@@ -31,7 +31,7 @@ public class ClassesMapperTest {
     @Test
     public void getAllClasses()throws Exception{
         List<Classes> classes = (List<Classes>) classesMapper.getAllClasses();
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper= new ObjectMapper();
         logger.info("test data    "+ mapper.writeValueAsString(classes));
     }
 
